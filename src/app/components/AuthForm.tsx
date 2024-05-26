@@ -5,7 +5,6 @@ import { useState } from "react";
 // ToDo: 5/26 フォームUI作成とusername,email,passwordを登録するようにする。画像はデフォルトを設定し、後からアップロードさせる（モーダルで表示もありだと思う）
 export default function AuthForm() {
   const [activeTab, setActiveTab] = useState("signup");
-  console.log(activeTab);
   return (
     <div className="flex flex-col">
       <div>
