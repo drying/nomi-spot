@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+import { Link } from "@chakra-ui/next-js";
 
 export default function Header() {
   return (
