@@ -10,6 +10,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
+import { login, signup } from "../auth/action";
 
 export default function AuthForm() {
   return (
@@ -34,19 +35,47 @@ export default function AuthForm() {
 
           <TabPanels>
             <TabPanel minHeight="250px">
-              <Stack spacing={3}>
-                <Input placeholder="ユーザーネーム" />
-                <Input placeholder="メールアドレス" />
-                <Input placeholder="パスワード" />
-                <Button colorScheme="blue">新規登録</Button>
-              </Stack>
+              <form action={signup}>
+                <Stack spacing={3}>
+                  <Input
+                    placeholder="ユーザーネーム"
+                    name="username"
+                    type="username"
+                  />
+                  <Input
+                    placeholder="メールアドレス"
+                    name="email"
+                    type="email"
+                  />
+                  <Input
+                    placeholder="パスワード"
+                    name="password"
+                    type="password"
+                  />
+                  <Button colorScheme="blue" type="submit">
+                    新規登録
+                  </Button>
+                </Stack>
+              </form>
             </TabPanel>
             <TabPanel minHeight="250px">
-              <Stack spacing={3}>
-                <Input placeholder="ユーザーネーム" />
-                <Input placeholder="メールアドレス" />
-                <Button colorScheme="blue">ログイン</Button>
-              </Stack>
+              <form action={login}>
+                <Stack spacing={3}>
+                  <Input
+                    placeholder="メールアドレス"
+                    name="email"
+                    type="email"
+                  />
+                  <Input
+                    placeholder="パスワード"
+                    name="password"
+                    type="password"
+                  />
+                  <Button colorScheme="blue" type="submit">
+                    ログイン
+                  </Button>
+                </Stack>
+              </form>
             </TabPanel>
           </TabPanels>
         </Tabs>
