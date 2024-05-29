@@ -10,8 +10,7 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
-import { login, signup } from "../auth/action";
-
+// ToDo: ログインユーザーのデータとテーブルを紐づける作業
 export default function AuthForm() {
   return (
     <>
@@ -35,7 +34,7 @@ export default function AuthForm() {
 
           <TabPanels>
             <TabPanel minHeight="250px">
-              <form action={signup}>
+              <form>
                 <Stack spacing={3}>
                   <Input
                     placeholder="ユーザーネーム"
@@ -59,7 +58,7 @@ export default function AuthForm() {
               </form>
             </TabPanel>
             <TabPanel minHeight="250px">
-              <form action={login}>
+              <form>
                 <Stack spacing={3}>
                   <Input
                     placeholder="メールアドレス"
