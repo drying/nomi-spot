@@ -1,4 +1,5 @@
 "use client";
+// ToDO:ログイン機能追加する
 import {
   Tabs,
   TabList,
@@ -10,8 +11,18 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
-// ToDo: ログインユーザーのデータとテーブルを紐づける作業
+import { useState } from "react";
+import { handleSingup } from "../utils/firebaseAuth";
+
 export default function AuthForm() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await handleSingup(email, password);
+  };
+
   return (
     <>
       <Box
@@ -34,22 +45,21 @@ export default function AuthForm() {
 
           <TabPanels>
             <TabPanel minHeight="250px">
-              <form>
+              <form onSubmit={onSubmit}>
                 <Stack spacing={3}>
-                  <Input
-                    placeholder="ユーザーネーム"
-                    name="username"
-                    type="username"
-                  />
                   <Input
                     placeholder="メールアドレス"
                     name="email"
                     type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                   <Input
                     placeholder="パスワード"
                     name="password"
                     type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <Button colorScheme="blue" type="submit">
                     新規登録
