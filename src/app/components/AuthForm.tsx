@@ -1,94 +1,91 @@
-"use client";
-// ToDO:ログイン機能追加する
 import {
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  Stack,
   Button,
-  Box,
+  Input,
+  Link,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  VStack,
+  useDisclosure,
 } from "@chakra-ui/react";
-import { Input } from "@chakra-ui/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { handleSingup } from "../utils/firebaseAuth";
 
 export default function AuthForm() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [authName, setAuthName] = useState("新規登録");
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const initialRef = useRef(null);
+
+  const authNames = ["新規登録", "ログイン"];
+
+  const handleAuthClick = (newAuthName: string) => {
+    setAuthName(newAuthName);
+    onOpen();
+  };
+
+  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await handleSingup(email, password);
+    alert("mypageに移動します");
+    // await handleSingup(email, password);
   };
 
   return (
     <>
-      <Box
-        px={12}
-        py={8}
-        border="1px"
-        borderRadius="md"
-        borderColor="gray.200"
-        boxShadow="sm"
-      >
-        <Tabs isFitted variant="unstyled" width="100%" maxWidth="400px">
-          <TabList>
-            <Tab
-              _selected={{ color: "white", bg: "black", borderTopRadius: "4" }}
-            >
-              新規登録
-            </Tab>
-            <Tab _selected={{ color: "white", bg: "black" }}>ログイン</Tab>
-          </TabList>
+      {authNames.map((authName) => (
+        <Button
+          onClick={() => handleAuthClick(authName)}
+          key={authName}
+          bg={authName === "新規登録" ? "black" : "initial"}
+          color={authName === "新規登録" ? "white" : "initial"}
+        >
+          {`${authName}`}
+        </Button>
+      ))}
 
-          <TabPanels>
-            <TabPanel minHeight="250px">
-              <form onSubmit={onSubmit}>
-                <Stack spacing={3}>
-                  <Input
-                    placeholder="メールアドレス"
-                    name="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <Input
-                    placeholder="パスワード"
-                    name="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <Button colorScheme="blue" type="submit">
-                    新規登録
-                  </Button>
-                </Stack>
-              </form>
-            </TabPanel>
-            <TabPanel minHeight="250px">
-              <form>
-                <Stack spacing={3}>
-                  <Input
-                    placeholder="メールアドレス"
-                    name="email"
-                    type="email"
-                  />
-                  <Input
-                    placeholder="パスワード"
-                    name="password"
-                    type="password"
-                  />
-                  <Button colorScheme="blue" type="submit">
-                    ログイン
-                  </Button>
-                </Stack>
-              </form>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
+      <Modal onClose={onClose} isOpen={isOpen}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{authName}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <form onSubmit={handleOnSubmit}>
+              <VStack spacing={4}>
+                <Input
+                  placeholder="メールアドレス"
+                  name="email"
+                  type="email"
+                  value={email}
+                  ref={initialRef}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <Input
+                  placeholder="パスワード"
+                  name="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </VStack>
+            </form>
+          </ModalBody>
+
+          <ModalFooter>
+            <Link href="/mypage">
+              <Button colorScheme="blue" mr={3} as="a" type="submit">
+                {authName === "新規登録" ? "新規登録" : "ログイン"}
+              </Button>
+            </Link>
+            <Button onClick={onClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
