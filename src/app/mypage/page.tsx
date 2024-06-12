@@ -7,7 +7,9 @@ import {
   CardFooter,
   Container,
   Heading,
+  IconButton,
   Image,
+  Link,
   Stack,
   Tab,
   TabList,
@@ -28,7 +30,13 @@ export default function Mypage() {
         <Box className="flex justify-center items-center m-6 space-x-4">
           <Avatar name="yukimatsu" src="/profile.jpg" size="lg" />
           <Text className="text-3xl font-bold">yukimatsu</Text>
-          <Cog6ToothIcon className="h-6 w-6" />
+          <Link href="/register">
+            <IconButton
+              icon={<Cog6ToothIcon className="h-6 w-6" />}
+              aria-label="Register"
+              variant="ghost"
+            />
+          </Link>
         </Box>
         <Box className="flex justify-items-start w-96 h-24 border-2 border-gray-100 rounded-md p-2 mx-auto my-6">
           <Text className="text-sm text-gray-600">
