@@ -30,7 +30,7 @@ export default function AuthForm() {
     onOpen();
   };
 
-  const handleOnSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleClickSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     alert("mypageに移動します");
     // await handleSingup(email, password);
@@ -55,7 +55,7 @@ export default function AuthForm() {
           <ModalHeader>{authName}</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <form onSubmit={handleOnSubmit}>
+            <form onSubmit={handleClickSubmit}>
               <VStack spacing={4}>
                 <Input
                   placeholder="メールアドレス"
@@ -77,7 +77,7 @@ export default function AuthForm() {
           </ModalBody>
 
           <ModalFooter>
-            <Link href="/mypage">
+            <Link href={authName === "新規登録" ? "/register" : "mypage"}>
               <Button colorScheme="blue" mr={3} as="a" type="submit">
                 {authName === "新規登録" ? "新規登録" : "ログイン"}
               </Button>
