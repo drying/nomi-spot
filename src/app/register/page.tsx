@@ -5,6 +5,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Heading,
   Input,
   Link,
   Textarea,
@@ -26,7 +27,7 @@ export default function Register() {
         <Flex
           justifyContent="center"
           alignItems="center"
-          h="500px"
+          h="600px"
           w="600px"
           bg="gray.50"
           p="10"
@@ -35,9 +36,10 @@ export default function Register() {
         >
           <form onSubmit={handleClickRegister}>
             <VStack spacing={6}>
+              <Heading as="h1" size="lg">
+                プロフィール登録
+              </Heading>
               <FormControl>
-                <FormLabel>プロフィール画像</FormLabel>
-                <UploadImage />
                 <FormLabel>ユーザーネーム</FormLabel>
                 <Input
                   placeholder="ユーザーネーム"
@@ -47,8 +49,10 @@ export default function Register() {
                   onChange={(e) => setUserName(e.target.value)}
                   mb={4}
                 />
-                <FormLabel>プロフィール文章</FormLabel>
-                <Textarea placeholder="プロフィール文" size="lg" />
+                <FormLabel>About</FormLabel>
+                <Textarea placeholder="プロフィール文" size="lg" mb={4} />
+                <FormLabel>画像</FormLabel>
+                <UploadImage />
               </FormControl>
               <Link href="mypage">
                 <Button colorScheme="blue" as="a" type="submit" minW="244px">

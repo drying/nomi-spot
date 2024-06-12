@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Avatar, Button, Image, Input, Text, VStack } from "@chakra-ui/react";
+import { Avatar, Button, Flex, Input, VStack } from "@chakra-ui/react";
 
 export default function UploadImage() {
   const [uploadImage, setUploadImage] = useState<string | null>(null);
@@ -56,22 +56,20 @@ export default function UploadImage() {
       />
       {uploadImage ? (
         <>
-          <Avatar src={uploadImage} size="lg" />
-          <Button m={2} onClick={handleClickCancel}>
-            キャンセル
-          </Button>
+          <Flex alignItems="center">
+            <Avatar src={uploadImage} size="xl" mr={4} />
+            <Button m={2} onClick={handleClickCancel}>
+              キャンセル
+            </Button>
+          </Flex>
         </>
       ) : (
-        <>
-          <Button
-            onClick={handleClickButton}
-            colorScheme="blue"
-            mb={4}
-            w="100%"
-          >
+        <Flex alignItems="center">
+          <Avatar size="xl" mr={4} />
+          <Button onClick={handleClickButton} colorScheme="blue" w="100%">
             Upload Image
           </Button>
-        </>
+        </Flex>
       )}
     </VStack>
   );
