@@ -26,7 +26,7 @@ export default function Register() {
         <Flex
           justifyContent="center"
           alignItems="center"
-          h="400px"
+          h="500px"
           w="600px"
           bg="gray.50"
           p="10"
