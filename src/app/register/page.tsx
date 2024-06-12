@@ -1,15 +1,17 @@
 "use client";
 
 import {
-  AbsoluteCenter,
-  Box,
   Button,
-  Center,
+  Flex,
+  FormControl,
+  FormLabel,
   Input,
   Link,
+  Textarea,
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import UploadImage from "../components/UploadImage";
 
 export default function Register() {
   const [userName, setUserName] = useState<string>("");
@@ -20,33 +22,43 @@ export default function Register() {
   };
   return (
     <>
-      <Box
-        position="relative"
-        h="100px"
-        w="200px"
-        bg="gray.50"
-        p="10"
-        rounded="lg"
-      >
-        <AbsoluteCenter axis="both">
+      <Flex justifyContent="center" alignItems="center" h="100vh">
+        <Flex
+          justifyContent="center"
+          alignItems="center"
+          h="400px"
+          w="600px"
+          bg="gray.50"
+          p="10"
+          rounded="lg"
+          boxShadow="lg"
+        >
           <form onSubmit={handleClickRegister}>
-            <VStack spacing={4}>
-              <Input
-                placeholder="ユーザーネーム"
-                name="username"
-                type="text"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-              />
+            <VStack spacing={6}>
+              <FormControl>
+                <FormLabel>プロフィール画像</FormLabel>
+                <UploadImage />
+                <FormLabel>ユーザーネーム</FormLabel>
+                <Input
+                  placeholder="ユーザーネーム"
+                  name="username"
+                  type="text"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  mb={4}
+                />
+                <FormLabel>プロフィール文章</FormLabel>
+                <Textarea placeholder="プロフィール文" size="lg" />
+              </FormControl>
               <Link href="mypage">
-                <Button colorScheme="blue" mr={3} as="a" type="submit">
+                <Button colorScheme="blue" as="a" type="submit" minW="244px">
                   登録
                 </Button>
               </Link>
             </VStack>
           </form>
-        </AbsoluteCenter>
-      </Box>
+        </Flex>
+      </Flex>
     </>
   );
 }
