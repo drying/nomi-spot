@@ -1,3 +1,4 @@
+"use client";
 import {
   Avatar,
   Box,
@@ -21,22 +22,46 @@ import {
 import Header from "../components/Header";
 import { Cog6ToothIcon } from "@heroicons/react/16/solid";
 import Footer from "../components/Footer";
+import { useState } from "react";
+import RegisterForm from "../components/RegisterForm";
 
 export default function Mypage() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentUsername, setCurrentUsername] = useState("username");
+
+  const handleOpen = () => {
+    setIsVisible(!isVisible);
+  };
+
+  const handleClose = () => {
+    setIsVisible(false);
+  };
+
+  const handleUpdateUsername = (newUsername: string) => {
+    setCurrentUsername(newUsername);
+    setIsVisible(false);
+  };
+
   return (
     <>
       <Header />
       <Container>
         <Box className="flex justify-center items-center m-6 space-x-4">
           <Avatar name="yukimatsu" src="/profile.jpg" size="lg" />
-          <Text className="text-3xl font-bold">yukimatsu</Text>
-          <Link href="/register">
-            <IconButton
-              icon={<Cog6ToothIcon className="h-6 w-6" />}
-              aria-label="Register"
-              variant="ghost"
-            />
-          </Link>
+          <Text className="text-3xl font-bold">{currentUsername}</Text>
+          {/* クリックしたらモーダルで表示させる */}
+          <IconButton
+            aria-label="Register"
+            icon={<Cog6ToothIcon className="h-6 w-6" />}
+            variant="ghost"
+            onClick={handleOpen}
+          />
+          <RegisterForm
+            isOpen={isVisible}
+            onClose={handleClose}
+            currentUsername={currentUsername}
+            onUpdateUsername={handleUpdateUsername}
+          />
         </Box>
         <Box className="flex justify-items-start w-96 h-24 border-2 border-gray-100 rounded-md p-2 mx-auto my-6">
           <Text className="text-sm text-gray-600">
