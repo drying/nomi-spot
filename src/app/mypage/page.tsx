@@ -78,9 +78,11 @@ export default function Mypage() {
                     </CardBody>
 
                     <CardFooter>
-                      <Button variant="solid" colorScheme="blue">
-                        Buy Latte
-                      </Button>
+                      <Link href="/store">
+                        <Button variant="solid" colorScheme="blue">
+                          Buy Latte
+                        </Button>
+                      </Link>
                     </CardFooter>
                   </Stack>
                 </Card>
