@@ -1,7 +1,9 @@
 import {
   Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Input,
-  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -12,28 +14,45 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
-import { handleSingup } from "../utils/firebaseAuth";
+import { useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+type Inputs = {
+  email: string;
+  password: string;
+};
+
+const schema = z.object({
+  email: z
+    .string()
+    .min(1, "メールアドレスは必須です")
+    .email("有効なメールアドレスを入力してください"),
+  password: z
+    .string()
+    .min(8, "パスワードは8文字以上で入力してください")
+    .regex(/^[a-zA-Z0-9]+$/, "パスワードは英数字のみで入力してください"),
+});
 
 export default function AuthForm() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm<Inputs>({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+
   const [authName, setAuthName] = useState("新規登録");
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const initialRef = useRef(null);
-
   const authNames = ["新規登録", "ログイン"];
 
   const handleAuthClick = (newAuthName: string) => {
     setAuthName(newAuthName);
     onOpen();
-  };
-
-  const handleClickSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    alert("mypageに移動します");
-    // await handleSingup(email, password);
   };
 
   return (
@@ -54,36 +73,44 @@ export default function AuthForm() {
         <ModalContent>
           <ModalHeader>{authName}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody pb={6}>
-            <form onSubmit={handleClickSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <ModalBody pb={6}>
               <VStack spacing={4}>
-                <Input
-                  placeholder="メールアドレス"
-                  name="email"
-                  type="email"
-                  value={email}
-                  ref={initialRef}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <Input
-                  placeholder="パスワード"
-                  name="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <FormControl isInvalid={!!errors.email || !!errors.password}>
+                  <FormLabel htmlFor="email">メールアドレス</FormLabel>
+                  <Input
+                    type="email"
+                    placeholder="email"
+                    {...register("email")}
+                  />
+                  <FormErrorMessage>
+                    {errors.email && errors.email.message}
+                  </FormErrorMessage>
+                  <FormLabel htmlFor="password">パスワード</FormLabel>
+                  <Input
+                    type="passwprd"
+                    placeholder="password"
+                    {...register("password")}
+                  />
+                  <FormErrorMessage>
+                    {errors.password && errors.password.message}
+                  </FormErrorMessage>
+                </FormControl>
               </VStack>
-            </form>
-          </ModalBody>
+            </ModalBody>
 
-          <ModalFooter>
-            <Link href={authName === "新規登録" ? "/register" : "mypage"}>
-              <Button colorScheme="blue" mr={3} as="a" type="submit">
+            <ModalFooter>
+              <Button
+                type="submit"
+                mr={2}
+                colorScheme="blue"
+                isLoading={isSubmitting}
+              >
                 {authName === "新規登録" ? "新規登録" : "ログイン"}
               </Button>
-            </Link>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
+              <Button onClick={onClose}>Cancel</Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </>
