@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -19,18 +20,33 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
-import Header from "../components/Header";
 import { Cog6ToothIcon } from "@heroicons/react/16/solid";
+import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { useState } from "react";
 import RegisterForm from "../components/RegisterForm";
+import CustomAlert from "../components/CustomAlert";
 
 export default function Mypage() {
   const [isVisible, setIsVisible] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [currentUsername, setCurrentUsername] = useState("username");
+
+  useEffect(() => {
+    const isAlertShown = localStorage.getItem("isAlertShown");
+
+    if (!isAlertShown) {
+      setShowAlert(true);
+      localStorage.setItem("isAlertShown", "true");
+    }
+  }, []);
 
   const handleOpen = () => {
     setIsVisible(!isVisible);
+  };
+
+  const handleCloseAlert = () => {
+    setShowAlert(false);
+    setIsVisible(true);
   };
 
   const handleClose = () => {
@@ -49,19 +65,23 @@ export default function Mypage() {
         <Box className="flex justify-center items-center m-6 space-x-4">
           <Avatar name="yukimatsu" src="/profile.jpg" size="lg" />
           <Text className="text-3xl font-bold">{currentUsername}</Text>
-          {/* クリックしたらモーダルで表示させる */}
           <IconButton
             aria-label="Register"
             icon={<Cog6ToothIcon className="h-6 w-6" />}
             variant="ghost"
             onClick={handleOpen}
           />
-          <RegisterForm
-            isOpen={isVisible}
-            onClose={handleClose}
-            currentUsername={currentUsername}
-            onUpdateUsername={handleUpdateUsername}
-          />
+          {showAlert && (
+            <CustomAlert isOpen={showAlert} onClose={handleCloseAlert} />
+          )}
+          {isVisible && (
+            <RegisterForm
+              isOpen={isVisible}
+              onClose={handleClose}
+              currentUsername={currentUsername}
+              onUpdateUsername={handleUpdateUsername}
+            />
+          )}
         </Box>
         <Box className="flex justify-items-start w-96 h-24 border-2 border-gray-100 rounded-md p-2 mx-auto my-6">
           <Text className="text-sm text-gray-600">
@@ -72,9 +92,9 @@ export default function Mypage() {
           <Tabs align="center">
             <TabList>
               {/* map関数でリストを作成する */}
-              <Tab>リスト</Tab>
-              <Tab>リスト</Tab>
-              <Tab>リスト</Tab>
+              <Tab>行きたい</Tab>
+              <Tab>行った</Tab>
+              <Tab>お気に入り</Tab>
             </TabList>
 
             <TabPanels>

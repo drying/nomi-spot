@@ -17,6 +17,7 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import UploadImage from "./UploadImage";
 
 const createSchema = (cuurentUsername: string) => {
   return z.object({
@@ -52,13 +53,10 @@ export default function RegisterForm({
   const {
     handleSubmit,
     register,
-    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
-
-  const username = watch("username", currentUsername);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     console.log(data);
@@ -83,17 +81,13 @@ export default function RegisterForm({
                     defaultValue={currentUsername}
                     placeholder="username"
                     {...register("username")}
+                    mb={4}
                   />
                   <FormErrorMessage>
                     {errors.username && errors.username.message}
                   </FormErrorMessage>
                   <FormLabel htmlFor="profileImage">アイコン</FormLabel>
-                  <Input
-                    id="profileImage"
-                    type="file"
-                    placeholder="profileImage"
-                    {...register("profileImage")}
-                  />
+                  <UploadImage />
                   <FormErrorMessage>
                     {errors.profileImage && errors.profileImage.message}
                   </FormErrorMessage>
