@@ -61,7 +61,7 @@ export default function AuthForm() {
         <Button
           onClick={() => handleAuthClick(authName)}
           key={authName}
-          bg={authName === "新規登録" ? "black" : "initial"}
+          bg={authName === "新規登録" ? "black" : "#EDF2F8"}
           color={authName === "新規登録" ? "white" : "initial"}
         >
           {`${authName}`}
