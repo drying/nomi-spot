@@ -57,13 +57,13 @@ export const handleLogout = async () => {
   }
 };
 
-// export const handleLoginStatus = async () => {
-//   const user = auth.currentUser;
-//   if (user?.uid) {
-//     console.log("ログイン中のユーザー", user.email);
-//     return true;
-//   } else {
-//     console.log("ログインしているユーザーなし");
-//     return false;
-//   }
-// };
+export const handleLoginStatus = async () => {
+  const user = auth.currentUser;
+  if (user) {
+    console.log("ログイン中のユーザー", user.email);
+    return true;
+  } else {
+    console.log("ログインしているユーザーなし");
+    return false;
+  }
+};

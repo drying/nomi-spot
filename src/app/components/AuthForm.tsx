@@ -21,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AuthDate,
   handleLogin,
+  handleLoginStatus,
   handleLogout,
   handleSignup,
 } from "../utils/firebaseAuth";
@@ -57,10 +58,6 @@ export default function AuthForm() {
   const router = useRouter();
   const authNames = ["新規登録", "ログイン"];
 
-  useEffect(() => {
-    console.log("ユーザーの状態:", isLoggedInUser);
-  }, [isLoggedInUser]);
-
   const handleAuthClick = (newAuthName: string) => {
     setAuthName(newAuthName);
     onOpen();
@@ -82,12 +79,10 @@ export default function AuthForm() {
 
       if (authName === "新規登録") {
         const user = await handleSignup(authData);
-        setIsLoggedInUser(true);
         console.log("新規登録完了:", user);
         router.push("/mypage");
       } else {
         const user = await handleLogin(authData);
-        setIsLoggedInUser(true);
         console.log("ログイン完了:", user);
         router.push("/mypage");
       }
@@ -110,6 +105,20 @@ export default function AuthForm() {
       console.error("Logout error", error);
     }
   };
+
+  const loggedInStatus = async () => {
+    try {
+      const status = await handleLoginStatus();
+      console.log("ログイン状態", status);
+      setIsLoggedInUser(status);
+    } catch (error) {
+      console.log("Login Status", error);
+    }
+  };
+
+  useEffect(() => {
+    loggedInStatus();
+  }, [isLoggedInUser]);
 
   return (
     <>
