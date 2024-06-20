@@ -14,10 +14,17 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AuthDate,
+  handleLogin,
+  handleLogout,
+  handleSignup,
+} from "../utils/firebaseAuth";
+import { useRouter } from "next/navigation";
 
 type Inputs = {
   email: string;
@@ -44,29 +51,84 @@ export default function AuthForm() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
-
   const [authName, setAuthName] = useState("新規登録");
+  const [isLoggedInUser, setIsLoggedInUser] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const router = useRouter();
   const authNames = ["新規登録", "ログイン"];
+
+  useEffect(() => {
+    console.log("ユーザーの状態:", isLoggedInUser);
+  }, [isLoggedInUser]);
 
   const handleAuthClick = (newAuthName: string) => {
     setAuthName(newAuthName);
     onOpen();
+
+    if (newAuthName === "新規登録") {
+      router.push("?params=signup");
+    } else if (newAuthName === "ログイン") {
+      router.push("?params=login");
+    }
+  };
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    console.log(data);
+    try {
+      const authData: AuthDate = {
+        email: data.email,
+        password: data.password,
+      };
+
+      if (authName === "新規登録") {
+        const user = await handleSignup(authData);
+        setIsLoggedInUser(true);
+        console.log("新規登録完了:", user);
+        router.push("/mypage");
+      } else {
+        const user = await handleLogin(authData);
+        setIsLoggedInUser(true);
+        console.log("ログイン完了:", user);
+        router.push("/mypage");
+      }
+      onClose();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error message", error.message);
+      } else {
+        console.error("Unknow error", error);
+      }
+    }
+  };
+
+  const handleLogoutClick = async () => {
+    try {
+      await handleLogout();
+      setIsLoggedInUser(false);
+      router.push("/");
+    } catch (error) {
+      console.error("Logout error", error);
+    }
   };
 
   return (
     <>
-      {authNames.map((authName) => (
-        <Button
-          onClick={() => handleAuthClick(authName)}
-          key={authName}
-          bg={authName === "新規登録" ? "black" : "#EDF2F8"}
-          color={authName === "新規登録" ? "white" : "initial"}
-        >
-          {`${authName}`}
+      {isLoggedInUser ? (
+        <Button onClick={handleLogoutClick} bg="red.500" color="white">
+          ログアウト
         </Button>
-      ))}
+      ) : (
+        authNames.map((authName) => (
+          <Button
+            onClick={() => handleAuthClick(authName)}
+            key={authName}
+            bg={authName === "新規登録" ? "black" : "#EDF2F8"}
+            color={authName === "新規登録" ? "white" : "initial"}
+          >
+            {`${authName}`}
+          </Button>
+        ))
+      )}
 
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />
@@ -76,7 +138,7 @@ export default function AuthForm() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <ModalBody pb={6}>
               <VStack spacing={4}>
-                <FormControl isInvalid={!!errors.email || !!errors.password}>
+                <FormControl isInvalid={!!errors.email}>
                   <FormLabel htmlFor="email">メールアドレス</FormLabel>
                   <Input
                     type="email"
@@ -86,9 +148,11 @@ export default function AuthForm() {
                   <FormErrorMessage>
                     {errors.email && errors.email.message}
                   </FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.password}>
                   <FormLabel htmlFor="password">パスワード</FormLabel>
                   <Input
-                    type="passwprd"
+                    type="password"
                     placeholder="password"
                     {...register("password")}
                   />

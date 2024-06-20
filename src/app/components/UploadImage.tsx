@@ -1,8 +1,16 @@
 import React, { useRef, useState } from "react";
 import { Avatar, Button, Flex, Input, VStack } from "@chakra-ui/react";
 
-export default function UploadImage() {
-  const [uploadImage, setUploadImage] = useState<string | null>(null);
+type currentImage = {
+  setUploadImage: (image: string | null) => void;
+  uploadImage: string | null;
+};
+
+export default function UploadImage({
+  setUploadImage,
+  uploadImage,
+}: currentImage) {
+  // const [uploadImage, setUploadImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // 画像プレビュー機能

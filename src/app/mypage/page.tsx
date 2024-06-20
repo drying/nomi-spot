@@ -30,6 +30,7 @@ export default function Mypage() {
   const [isVisible, setIsVisible] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [currentUsername, setCurrentUsername] = useState("username");
+  const [uploadImage, setUploadImage] = useState<string | null>(null);
 
   useEffect(() => {
     const isAlertShown = localStorage.getItem("isAlertShown");
@@ -63,7 +64,11 @@ export default function Mypage() {
       <Header />
       <Container>
         <Box className="flex justify-center items-center m-6 space-x-4">
-          <Avatar name="yukimatsu" src="/profile.jpg" size="lg" />
+          {uploadImage ? (
+            <Avatar name={currentUsername} src={uploadImage} size="lg" />
+          ) : (
+            <Avatar name={currentUsername} src="" size="lg" />
+          )}
           <Text className="text-3xl font-bold">{currentUsername}</Text>
           <IconButton
             aria-label="Register"
@@ -80,6 +85,8 @@ export default function Mypage() {
               onClose={handleClose}
               currentUsername={currentUsername}
               onUpdateUsername={handleUpdateUsername}
+              setUploadImage={setUploadImage}
+              uploadImage={uploadImage}
             />
           )}
         </Box>

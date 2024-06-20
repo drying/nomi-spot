@@ -13,7 +13,7 @@ import {
   ModalOverlay,
   VStack,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,6 +40,8 @@ type Toggle = {
   onClose: () => void;
   currentUsername: string;
   onUpdateUsername: (newUsername: string) => void;
+  setUploadImage: (image: string | null) => void;
+  uploadImage: string | null;
 };
 
 export default function RegisterForm({
@@ -47,6 +49,8 @@ export default function RegisterForm({
   onClose,
   currentUsername,
   onUpdateUsername,
+  setUploadImage,
+  uploadImage,
 }: Toggle) {
   const schema = createSchema(currentUsername);
 
@@ -87,7 +91,10 @@ export default function RegisterForm({
                     {errors.username && errors.username.message}
                   </FormErrorMessage>
                   <FormLabel htmlFor="profileImage">アイコン</FormLabel>
-                  <UploadImage />
+                  <UploadImage
+                    setUploadImage={setUploadImage}
+                    uploadImage={uploadImage}
+                  />
                   <FormErrorMessage>
                     {errors.profileImage && errors.profileImage.message}
                   </FormErrorMessage>
