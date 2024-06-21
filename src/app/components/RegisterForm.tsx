@@ -13,11 +13,13 @@ import {
   ModalOverlay,
   VStack,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import UploadImage from "./UploadImage";
+import { auth } from "../utils/firebaseConfig";
+import { updateUsername } from "../utils/firebaseData";
 
 const createSchema = (cuurentUsername: string) => {
   return z.object({
@@ -62,10 +64,15 @@ export default function RegisterForm({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
-    onUpdateUsername(data.username);
-    onClose();
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const user = auth.currentUser;
+    if (user) {
+      await updateUsername(user.uid, data.username);
+      onUpdateUsername(data.username);
+      onClose();
+    } else {
+      console.error("このユーザーはログインしていません");
+    }
   };
 
   return (

@@ -25,6 +25,9 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import RegisterForm from "../components/RegisterForm";
 import CustomAlert from "../components/CustomAlert";
+import { onAuthStateChanged } from "firebase/auth";
+import { getUsername } from "../utils/firebaseData";
+import { auth } from "../utils/firebaseConfig";
 
 export default function Mypage() {
   const [isVisible, setIsVisible] = useState(false);
@@ -39,6 +42,22 @@ export default function Mypage() {
       setShowAlert(true);
       localStorage.setItem("isAlertShown", "true");
     }
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const fetchedUsername = await getUsername(user.uid);
+        if (fetchedUsername) {
+          setCurrentUsername(fetchedUsername);
+        } else {
+          console.error("ユーザーネームが見つかりません");
+        }
+      } else {
+        setCurrentUsername("username");
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   const handleOpen = () => {

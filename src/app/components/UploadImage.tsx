@@ -1,5 +1,7 @@
 import React, { useRef, useState } from "react";
 import { Avatar, Button, Flex, Input, VStack } from "@chakra-ui/react";
+import { auth, storage } from "../utils/firebaseConfig";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 type currentImage = {
   setUploadImage: (image: string | null) => void;
@@ -10,7 +12,6 @@ export default function UploadImage({
   setUploadImage,
   uploadImage,
 }: currentImage) {
-  // const [uploadImage, setUploadImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // 画像プレビュー機能
@@ -33,6 +34,20 @@ export default function UploadImage({
       reader.readAsDataURL(file);
     } else {
       setUploadImage(null);
+    }
+  };
+
+  const uploadToFirebase = async (file: File) => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const fileRef = ref(storage, `userIcons/${user.uid}`);
+        await uploadBytes(fileRef, file);
+        const downloadURL = await getDownloadURL(fileRef);
+        setUploadImage(downloadURL);
+      }
+    } catch (error) {
+      console.error("画像のアップロードに失敗しました", error);
     }
   };
 

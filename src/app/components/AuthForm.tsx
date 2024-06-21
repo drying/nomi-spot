@@ -53,7 +53,7 @@ export default function AuthForm() {
   });
 
   const [authName, setAuthName] = useState("新規登録");
-  const [isLoggedInUser, setIsLoggedInUser] = useState(false);
+  const [isLoggedInUser, setIsLoggedInUser] = useState<boolean | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
   const authNames = ["新規登録", "ログイン"];

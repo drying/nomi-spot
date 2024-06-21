@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
@@ -58,12 +59,15 @@ export const handleLogout = async () => {
 };
 
 export const handleLoginStatus = async () => {
-  const user = auth.currentUser;
-  if (user) {
-    console.log("ログイン中のユーザー", user.email);
-    return true;
-  } else {
-    console.log("ログインしているユーザーなし");
-    return false;
-  }
+  return new Promise<boolean>((resolve) => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("ログイン中のユーザー", user.email);
+        resolve(true);
+      } else {
+        console.log("ログインしているユーザーなし");
+        resolve(false);
+      }
+    });
+  });
 };
