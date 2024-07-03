@@ -1,8 +1,21 @@
-import { Flex, Heading, Image, Stack, Text } from "@chakra-ui/react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import { Flex, Heading, Image, Stack, Text, Link } from "@chakra-ui/react";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import { getStoreById } from "@/app/utils/getStoreUtils";
 
-export default function Store() {
+interface StorePageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function StorePage({ params }: StorePageProps) {
+  const storeData = await getStoreById(params.id);
+
+  if (!storeData) {
+    return <div>お店が見つかりません</div>;
+  }
+
   return (
     <>
       <Header />
@@ -32,10 +45,37 @@ export default function Store() {
               mr={4}
             />
             <Stack>
-              <Heading mb={2}>〇〇飯店</Heading>
-              <Text fontSize="md">住所: 大阪府大阪市中央区〇〇２−２−２</Text>
-              <Text fontSize="md">instagram: </Text>
-              <Text fontSize="md">食べログ: </Text>
+              <Heading mb={2}>{storeData.name}</Heading>
+              <Text fontSize="md">住所: {storeData.address}</Text>
+              <Text fontSize="md">電話番号: {storeData.phone}</Text>
+              <Flex fontSize="md">
+                <Text>場所: </Text>
+                <Link href={storeData.place} isExternal color="blue.500" ml={1}>
+                  {storeData.place}
+                </Link>
+              </Flex>
+              <Flex fontSize="md">
+                <Text>instagram: </Text>
+                <Link
+                  href={storeData.instagram}
+                  isExternal
+                  color="blue.500"
+                  ml={1}
+                >
+                  {storeData.instagram}
+                </Link>
+              </Flex>
+              <Flex fontSize="md">
+                <Text>食べログ: </Text>
+                <Link
+                  href={storeData.tabelog}
+                  isExternal
+                  color="blue.500"
+                  ml={1}
+                >
+                  {storeData.tabelog}
+                </Link>
+              </Flex>
             </Stack>
           </Flex>
         </Flex>
