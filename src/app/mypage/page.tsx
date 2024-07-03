@@ -109,11 +109,6 @@ export default function Mypage() {
             />
           )}
         </Box>
-        <Box className="flex justify-items-start w-96 h-24 border-2 border-gray-100 rounded-md p-2 mx-auto my-6">
-          <Text className="text-sm text-gray-600">
-            テストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテストテスト
-          </Text>
-        </Box>
         <Box>
           <Tabs align="center">
             <TabList>
