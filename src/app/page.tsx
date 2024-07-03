@@ -1,14 +1,17 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { Box, Flex, Image, VStack } from "@chakra-ui/react";
 
 export default function Home() {
-  // ログイン状態をHeaderに渡してログインの文字とアイコンの表示切り替え
   return (
-    <div className="flex flex-col min-h-screen">
+    <VStack minH="100vh" spacing={0}>
       <Header />
-      {/* アプリのイメージは画像や動画を追加 */}
-      {/* Footerは最下部へ移動 */}
+      <Flex flex={1} justify="center" align="center" w="100%">
+        <Box w="90%" maxW="1200px">
+          <Image src="/nomi-spot_top.png" alt="nomi-spotイメージ画像" />
+        </Box>
+      </Flex>
       <Footer />
-    </div>
+    </VStack>
   );
 }
