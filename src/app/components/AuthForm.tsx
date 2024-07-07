@@ -123,7 +123,12 @@ export default function AuthForm() {
   return (
     <>
       {isLoggedInUser ? (
-        <Button onClick={handleLogoutClick} bg="red.500" color="white">
+        <Button
+          onClick={handleLogoutClick}
+          bg="red.500"
+          color="white"
+          minW="120px"
+        >
           ログアウト
         </Button>
       ) : (
