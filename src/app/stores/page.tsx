@@ -1,19 +1,26 @@
-import { Link } from "@chakra-ui/react";
-import { getStoreData } from "../utils/getStoreUtils";
+"use client";
+import StoreList from "../components/StoreList";
+import { useEffect, useState } from "react";
+import { StoreData } from "../types/types";
+import { getAllStores } from "../utils/getStoreUtils";
 
-export default async function StoresPage() {
-  const stores = await getStoreData();
+export default function StoresPage() {
+  const [stores, setStores] = useState<StoreData[]>([]);
 
-  return (
-    <div>
-      <h1>登録お店一覧</h1>
-      <ul>
-        {stores.map((store) => (
-          <li key={store.id}>
-            <Link href={`/store/${store.id}`}>{store.name}</Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  useEffect(() => {
+    const fetchStores = async () => {
+      try {
+        const storeData = await getAllStores();
+        console.log("Fetched all stores:", storeData); //デバック用
+        setStores(storeData);
+      } catch (error) {
+        console.error("Error fetching stores:", error);
+      }
+    };
+    fetchStores();
+  }, []);
+
+  console.log("Rendering stores:", stores); //デバック用
+
+  return <StoreList stores={stores} />;
 }

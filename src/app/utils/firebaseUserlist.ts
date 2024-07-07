@@ -1,7 +1,9 @@
 import {
+  addDoc,
   collection,
   deleteDoc,
   doc,
+  documentId,
   getDoc,
   getDocs,
   query,
@@ -15,6 +17,7 @@ import {
   MoveToListPrams,
   StoreData,
 } from "../types/types";
+import { timeStamp } from "console";
 
 // お店をリストに追加する関数
 export async function addStoreToList({
@@ -22,8 +25,16 @@ export async function addStoreToList({
   storeId,
   listType,
 }: AddRemoveToListPrams): Promise<void> {
-  const listRef = doc(db, "users", userId, "lists", listType, storeId);
-  await setDoc(listRef, { storeId, addedAt: new Date() });
+  const listRef = doc(
+    db,
+    "users",
+    userId,
+    "lists",
+    listType,
+    "storeId",
+    storeId
+  );
+  await setDoc(listRef, {});
 }
 
 // お店をリストから削除する関数
@@ -32,7 +43,15 @@ export async function removeStoreFromList({
   storeId,
   listType,
 }: AddRemoveToListPrams): Promise<void> {
-  const listRef = doc(db, "users", userId, "lists", listType, storeId);
+  const listRef = doc(
+    db,
+    "users",
+    userId,
+    "lists",
+    listType,
+    "storeId",
+    storeId
+  );
   await deleteDoc(listRef);
 }
 
@@ -53,45 +72,52 @@ export async function getStoreByList({
   listType,
 }: GetStoreByListPrams): Promise<StoreData[]> {
   try {
-    const listRef = doc(db, "users", userId, "lists", listType);
-    const listDocSnap = await getDoc(listRef);
+    console.log(`Fetching list for user ${userId}, listType: ${listType}`);
+    const storeIdsRef = collection(
+      db,
+      "users",
+      userId,
+      "lists",
+      listType,
+      "storeId"
+    );
+    const storeIdsSnapShot = await getDocs(storeIdsRef);
 
-    if (!listDocSnap.exists()) {
+    if (storeIdsSnapShot.empty) {
       console.log(`No ${listType} list found for user ${userId}`);
       return [];
     }
 
-    let storeIds = listDocSnap.data().storeId;
-    console.log(`Raw storeIDs for ${listType}:`, storeIds);
-
-    if (!Array.isArray(storeIds)) {
-      storeIds = storeIds ? [storeIds] : [];
-    }
-
-    console.log(`Processed storeIds for ${listType}:`, storeIds);
+    const storeIds = storeIdsSnapShot.docs.map((doc) => doc.id);
+    console.log(`Processed storeIDs for ${listType}:`, storeIds);
 
     if (storeIds.length === 0) {
       return [];
     }
 
-    const storesQuery = query(
-      collection(db, "stores"),
-      where("__name__", "in", storeIds)
-    );
-    const storesSnapshot = await getDocs(storesQuery);
-
-    const stores = storesSnapshot.docs.map(
-      (doc) =>
-        ({
-          id: doc.id,
-          ...doc.data(),
-        } as StoreData)
-    );
+    // Firestoreの制限（IN句で10個まで）に対応
+    const chunkSize = 10;
+    let stores: StoreData[] = [];
+    for (let i = 0; i < storeIds.length; i += chunkSize) {
+      const chunk = storeIds.slice(i, i + chunkSize);
+      const storesQuery = query(
+        collection(db, "stores"), // ここでグローバルな"stores"コレクションを参照
+        where(documentId(), "in", chunk)
+      );
+      console.log("Querying stores with IDs:", chunk);
+      const chunkSnapshot = await getDocs(storesQuery);
+      console.log(`Found ${chunkSnapshot.size} stores in this chunk`);
+      stores = stores.concat(
+        chunkSnapshot.docs.map(
+          (doc) => ({ id: doc.id, ...doc.data() } as StoreData)
+        )
+      );
+    }
 
     console.log(`Fetched ${stores.length} stores for ${listType}`);
     return stores;
   } catch (error) {
-    console.log("Error in getStoreByList", error);
+    console.error("Error in getStoreByList", error);
     throw error;
   }
 }

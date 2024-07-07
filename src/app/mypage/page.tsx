@@ -39,12 +39,10 @@ import {
   moveStoreToList,
   removeStoreFromList,
 } from "../utils/firebaseUserlist";
-import { useIconUrl } from "../contexts/IconUrlContext";
 
 export default function Mypage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
-  const { iconUrl } = useIconUrl();
   const [currentUsername, setCurrentUsername] = useState("username");
   const [showAlert, setShowAlert] = useState(false);
   const [stores, setStores] = useState<StoreData[]>([]);
@@ -114,6 +112,7 @@ export default function Mypage() {
         toListType,
       };
       await moveStoreToList(params);
+      alert("リストの移動が終わりました");
       setStores(stores.filter((store) => store.id !== storeId));
     } catch (error) {
       console.log("Error moving store to another list:", error);
@@ -130,6 +129,7 @@ export default function Mypage() {
         listType: activeTab,
       };
       await removeStoreFromList(params);
+      alert("リストから削除できました");
       setStores(stores.filter((store) => store.id !== storeId));
     } catch (error) {
       console.log("Error removing store from list:", error);
@@ -140,7 +140,7 @@ export default function Mypage() {
   const renderStoreActions = (store: StoreData) => {
     return (
       <Menu>
-        <MenuButton as={Button} colorScheme="blue" size="sm">
+        <MenuButton as={Button} colorScheme="gray" size="sm">
           操作
         </MenuButton>
         <MenuList>
@@ -239,7 +239,6 @@ export default function Mypage() {
                       <Box key={store.id} mb={4}>
                         <StoreCard
                           storeData={store}
-                          iconUrl={iconUrl ?? undefined}
                           isCompact={true}
                           onActionClick={() => router.push(`store/${store.id}`)}
                           actions={renderStoreActions(store)}

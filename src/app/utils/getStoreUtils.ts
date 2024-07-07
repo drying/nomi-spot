@@ -10,11 +10,8 @@ export const getStoreData = async (): Promise<StoreData[]> => {
         ({
           id: doc.id,
           name: doc.data().name,
-          address: doc.data().address,
-          phone: doc.data().phone,
           place: doc.data().place,
           instagram: doc.data().instagram,
-          tabelog: doc.data().tabelog,
         } as StoreData)
     );
   } catch (error) {
@@ -31,12 +28,7 @@ export const getStoreById = async (id: string): Promise<StoreData | null> => {
     if (docSnap.exists()) {
       return {
         id: docSnap.id,
-        name: docSnap.data().name,
-        address: docSnap.data().address,
-        phone: docSnap.data().phone,
-        place: docSnap.data().place,
-        instagram: docSnap.data().instagram,
-        tabelog: docSnap.data().tabelog,
+        ...docSnap.data(),
       } as StoreData;
     } else {
       console.log("お店データが見つかりませんでした");
@@ -46,4 +38,12 @@ export const getStoreById = async (id: string): Promise<StoreData | null> => {
     console.error("お店情報を取得できませんでした", error);
     throw error;
   }
+};
+
+export const getAllStores = async (): Promise<StoreData[]> => {
+  const storesCollection = collection(db, "stores");
+  const storesSnapshot = await getDocs(storesCollection);
+  return storesSnapshot.docs.map(
+    (doc) => ({ id: doc.id, ...doc.data() } as StoreData)
+  );
 };

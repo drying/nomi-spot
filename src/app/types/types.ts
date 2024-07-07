@@ -20,7 +20,10 @@ export interface StoreData {
   name: string;
   place: string;
   instagram: string;
-  status: Status;
+  status?: Status;
+  iconUrl?: string;
+  iconStorageUrl?: string;
+  lastIconUpdate?: Date;
 }
 
 // instagramポストの型定義
@@ -34,7 +37,6 @@ export interface InstagramPost {
 // StoreCardコンポーネントの型定義
 export interface StoreCardProps {
   storeData: StoreData;
-  iconUrl?: string;
   isCompact: boolean;
   onActionClick?: () => void;
   actionLabel?: string;

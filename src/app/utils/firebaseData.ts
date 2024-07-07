@@ -1,5 +1,6 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "./firebaseConfig";
+import { db, storage } from "./firebaseConfig";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export const updateUsername = async (userId: string, newUsername: string) => {
   try {
@@ -30,5 +31,30 @@ export const getUsername = async (userId: string) => {
   } catch (error) {
     console.error("データを取得できませんでした: ", error);
     return null;
+  }
+};
+
+export const uploadIMageToStorage = async (
+  imageUrl: string,
+  storeId: string
+): Promise<string> => {
+  try {
+    // 画像のフェッチ
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+
+    // Storageを参照
+    const storageRef = ref(storage, `store-icons/${storeId}.jpg`);
+
+    // 画像をアップロード
+    await uploadBytes(storageRef, blob);
+
+    // ダウンロードURLを取得
+    const downloadUrl = await getDownloadURL(storageRef);
+
+    return downloadUrl;
+  } catch (error) {
+    console.error("Error uploading image to Storage:", error);
+    throw error;
   }
 };

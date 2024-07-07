@@ -10,6 +10,7 @@ export default function Header() {
   const { user } = useAuth();
   const pathname = usePathname();
   const isMypage = pathname === "/mypage";
+  const isStoresPage = pathname === "/stores";
 
   return (
     <header className="flex h-16 w-full items-center justify-between px-4 my-4">
@@ -18,29 +19,18 @@ export default function Header() {
           Nomi Spot
         </Link>
       </div>
-      {/* <nav className="flex-1 flex items-center justify-center gap-10 ml-16">
-        <Link href="/" className="hover:underline hover:underline-offset-4">
-          Home
-          </Link>
+      <nav className="flex-1 flex items-center justify-center gap-10 ml-16">
+        {!isStoresPage && (
           <Link
-          href="/stores"
-          className="hover:underline hover:underline-offset-4"
+            href="/stores"
+            className="hover:underline hover:underline-offset-4"
+            fontSize="2xl"
+            fontWeight="bold"
           >
-          Stores
+            Stores
           </Link>
-          <Link
-          href="/about"
-          className="hover:underline hover:underline-offset-4"
-          >
-          About
-          </Link>
-          <Link
-          href="/contact"
-          className="hover:underline hover:underline-offset-4"
-          >
-          Contact
-          </Link>
-      </nav> */}
+        )}
+      </nav>
       <div className="flex items-center gap-4">
         {user && !isMypage && (
           <Link

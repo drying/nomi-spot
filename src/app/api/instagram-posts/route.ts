@@ -25,7 +25,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const url = `https://graph.facebook.com/v20.0/${instaBusinessId}?fields=business_discovery.username(${instaAccountName}){media.limit(10){caption,media_url,permalink,timestamp}}&access_token=${accessToken}`;
+  const url = `https://graph.facebook.com/v20.0/${instaBusinessId}?fields=business_discovery.username(${instaAccountName}){media.limit(8){caption,media_url,permalink,timestamp}}&access_token=${accessToken}`;
 
   try {
     console.log("Sending request to Instagram API"); // デバック用
