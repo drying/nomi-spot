@@ -38,12 +38,8 @@ export default function StoreCard({
               name={storeData.name}
             />
           </GridItem>
-          <GridItem alignSelf="center">
-            <Text
-              fontSize={isCompact ? "xl" : "2xl"}
-              fontWeight="bold"
-              ml={isCompact ? -10 : 0}
-            >
+          <GridItem justifySelf="start" alignSelf="center">
+            <Text fontSize={isCompact ? "md" : "2xl"} fontWeight="bold">
               {storeData.name}
             </Text>
           </GridItem>

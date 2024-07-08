@@ -15,26 +15,83 @@ import {
   AddRemoveToListPrams,
   GetStoreByListPrams,
   MoveToListPrams,
+  Status,
   StoreData,
 } from "../types/types";
-import { timeStamp } from "console";
 
 // お店をリストに追加する関数
 export async function addStoreToList({
   userId,
   storeId,
   listType,
-}: AddRemoveToListPrams): Promise<void> {
-  const listRef = doc(
-    db,
-    "users",
-    userId,
-    "lists",
-    listType,
-    "storeId",
-    storeId
-  );
-  await setDoc(listRef, {});
+}: {
+  userId: string;
+  storeId: string;
+  listType: Status;
+}): Promise<{ success: boolean; message: string }> {
+  try {
+    const existingListType = await checkStoreExistsInAnyList(userId, storeId);
+
+    if (existingListType) {
+      if (existingListType === listType) {
+        return {
+          success: false,
+          message: `このお店は既に${listType}リストに登録されています。`,
+        };
+      } else {
+        return {
+          success: false,
+          message: `このお店は既に${existingListType}リストに登録されています。`,
+        };
+      }
+    }
+
+    const listRef = doc(
+      db,
+      "users",
+      userId,
+      "lists",
+      listType,
+      "storeId",
+      storeId
+    );
+    await setDoc(listRef, {});
+    return {
+      success: true,
+      message: `お店が${listType}リストに追加されました。`,
+    };
+  } catch (error) {
+    console.error("Error adding store to list:", error);
+    return {
+      success: false,
+      message: "エラーが発生しました。もう一度お試しください。",
+    };
+  }
+}
+
+// お店がすでに存在するかチェック
+const LIST_TYPES: Status[] = ["wishlist", "visited", "favorite"];
+
+async function checkStoreExistsInAnyList(
+  userId: string,
+  storeId: string
+): Promise<Status | null> {
+  for (const listType of LIST_TYPES) {
+    const listRef = doc(
+      db,
+      "users",
+      userId,
+      "lists",
+      listType,
+      "storeId",
+      storeId
+    );
+    const docSnap = await getDoc(listRef);
+    if (docSnap.exists()) {
+      return listType;
+    }
+  }
+  return null;
 }
 
 // お店をリストから削除する関数

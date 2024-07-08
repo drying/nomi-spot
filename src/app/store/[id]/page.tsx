@@ -11,7 +11,6 @@ import {
   Button,
   MenuList,
   MenuItem,
-  HStack,
   Container,
   Flex,
 } from "@chakra-ui/react";
@@ -26,6 +25,7 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { addStoreToList } from "@/app/utils/firebaseUserlist";
 import { updateIconIfNeeded } from "@/app/utils/storeUtils";
+import { getInstagramPosts } from "@/app/utils/instagramCache";
 
 export const extractInstagramUsername = (url: string): string | null => {
   if (!url) return null;
@@ -65,12 +65,9 @@ export default function StorePage({ params }: StorePageProps) {
             const updatedData = await getStoreById(params.id);
             setStoreData(updatedData);
 
-            // Instagramの投稿を取得
-            const response = await axios.get(
-              `/api/instagram-posts?instaAccountName=${instagramUsername}`
-            );
-            console.log("Instagram API response:", response.data); // デバッグ用
-            setInstagramPosts(response.data.slice(0, 8)); // 最新8件を取得
+            // キャッシュを使用してInstagramの投稿を取得
+            const posts = await getInstagramPosts(instagramUsername);
+            setInstagramPosts(posts);
           }
         } else {
           setStoreData(data);
@@ -99,12 +96,24 @@ export default function StorePage({ params }: StorePageProps) {
       return;
     }
     try {
-      await addStoreToList({ userId: user.uid, storeId: params.id, listType });
-      alert(`${listType}に追加されました`);
-      router.push("/mypage");
-      console.log(`${listType}に追加されました`);
+      const result = await addStoreToList({
+        userId: user.uid,
+        storeId: params.id,
+        listType,
+      });
+      alert(result.message);
+
+      if (result.success) {
+        router.push("/mypage");
+        console.log(`${listType}に追加されました`);
+      }
     } catch (error) {
       console.error(`${listType}に追加中にエラーが発生しました`, error);
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("エラーが発生しました。もう一度お試しください");
+      }
     }
   };
 
