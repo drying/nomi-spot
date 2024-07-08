@@ -101,6 +101,7 @@ export default function StorePage({ params }: StorePageProps) {
     try {
       await addStoreToList({ userId: user.uid, storeId: params.id, listType });
       alert(`${listType}に追加されました`);
+      router.push("/mypage");
       console.log(`${listType}に追加されました`);
     } catch (error) {
       console.error(`${listType}に追加中にエラーが発生しました`, error);
