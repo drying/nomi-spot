@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Avatar, Button, Flex, Input, VStack } from "@chakra-ui/react";
 import { auth, storage } from "../utils/firebaseConfig";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -15,7 +15,7 @@ export default function UploadImage({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // 画像プレビュー機能
-  const handleClickUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleClickUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     // 画像が存在しているか
     if (files) {
@@ -32,6 +32,8 @@ export default function UploadImage({
       // プレビュー表示のためデータURLを読み込む
       // readAsDataURLはFileReaderのメソッド
       reader.readAsDataURL(file);
+
+      await uploadToFirebase(file);
     } else {
       setUploadImage(null);
     }

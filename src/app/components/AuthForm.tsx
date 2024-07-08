@@ -14,18 +14,18 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AuthDate,
   handleLogin,
-  handleLoginStatus,
   handleLogout,
   handleSignup,
 } from "../utils/firebaseAuth";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../contexts/AuthContext";
 
 type Inputs = {
   email: string;
@@ -53,9 +53,9 @@ export default function AuthForm() {
   });
 
   const [authName, setAuthName] = useState("新規登録");
-  const [isLoggedInUser, setIsLoggedInUser] = useState<boolean | null>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
+  const { user, loading } = useAuth();
   const authNames = ["新規登録", "ログイン"];
 
   const handleAuthClick = (newAuthName: string) => {
@@ -99,50 +99,50 @@ export default function AuthForm() {
   const handleLogoutClick = async () => {
     try {
       await handleLogout();
-      setIsLoggedInUser(false);
       router.push("/");
     } catch (error) {
       console.error("Logout error", error);
     }
   };
 
-  const loggedInStatus = async () => {
-    try {
-      const status = await handleLoginStatus();
-      console.log("ログイン状態", status);
-      setIsLoggedInUser(status);
-    } catch (error) {
-      console.log("Login Status", error);
-    }
-  };
+  // const loggedInStatus = async () => {
+  //   try {
+  //     const status = await handleLoginStatus();
+  //     console.log("ログイン状態", status);
+  //     setIsLoggedInUser(status);
+  //   } catch (error) {
+  //     console.log("Login Status", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    loggedInStatus();
-  }, [isLoggedInUser]);
+  // useEffect(() => {
+  //   loggedInStatus();
+  // }, [isLoggedInUser]);
 
   return (
     <>
-      {isLoggedInUser ? (
-        <Button
-          onClick={handleLogoutClick}
-          bg="red.500"
-          color="white"
-          minW="120px"
-        >
-          ログアウト
-        </Button>
-      ) : (
-        authNames.map((authName) => (
+      {!loading &&
+        (user ? (
           <Button
-            onClick={() => handleAuthClick(authName)}
-            key={authName}
-            bg={authName === "新規登録" ? "black" : "#EDF2F8"}
-            color={authName === "新規登録" ? "white" : "initial"}
+            onClick={handleLogoutClick}
+            bg="red.500"
+            color="white"
+            minW="120px"
           >
-            {`${authName}`}
+            ログアウト
           </Button>
-        ))
-      )}
+        ) : (
+          authNames.map((authName) => (
+            <Button
+              onClick={() => handleAuthClick(authName)}
+              key={authName}
+              bg={authName === "新規登録" ? "black" : "#EDF2F8"}
+              color={authName === "新規登録" ? "white" : "initial"}
+            >
+              {`${authName}`}
+            </Button>
+          ))
+        ))}
 
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />

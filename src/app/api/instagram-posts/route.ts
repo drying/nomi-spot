@@ -7,11 +7,6 @@ export async function GET(request: Request) {
   const instaBusinessId = process.env.INSTAGRAM_BUSINESS_ID;
   const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
 
-  console.log(
-    "Received request for Instagram posts. Username:",
-    instaAccountName
-  );
-
   if (!instaAccountName || !instaBusinessId || !accessToken) {
     console.error("Missing required parameters", {
       instaAccountName,
@@ -27,9 +22,7 @@ export async function GET(request: Request) {
   const url = `https://graph.facebook.com/v20.0/${instaBusinessId}?fields=business_discovery.username(${instaAccountName}){media.limit(20){caption,media_url,permalink,timestamp,media_type,children{media_type,media_url}}}&access_token=${accessToken}`;
 
   try {
-    console.log("Sending request to Instagram API"); // デバック用
     const response = await axios.get(url);
-    console.log("Received response from Instagram API"); // デバッグ用
 
     // 最新の投稿20件からひとまず動画のポストをのぞく画像のみ8件取得
     const allPosts = response.data.business_discovery.media.data;
