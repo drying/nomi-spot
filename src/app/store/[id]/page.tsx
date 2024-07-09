@@ -19,7 +19,6 @@ import Footer from "../../components/Footer";
 import { getStoreById } from "@/app/utils/getStoreUtils";
 import { useEffect, useState } from "react";
 import { InstagramPost, Status, StoreData } from "@/app/types/types";
-import axios from "axios";
 import StoreCard from "@/app/components/StoreCard";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
