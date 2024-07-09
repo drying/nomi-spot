@@ -55,13 +55,10 @@ export default function StorePage({ params }: StorePageProps) {
     const fetchData = async () => {
       try {
         const data = await getStoreById(params.id);
-        console.log("Fetecd store data:", data); //デバック用
         if (data && data.instagram) {
           const instagramUsername = extractInstagramUsername(data.instagram);
-          console.log("ユーザー名", instagramUsername);
           if (instagramUsername) {
             await updateIconIfNeeded(params.id, instagramUsername);
-
             const updatedData = await getStoreById(params.id);
             setStoreData(updatedData);
 
@@ -74,15 +71,7 @@ export default function StorePage({ params }: StorePageProps) {
         }
       } catch (error) {
         console.error("Error fetching data:", error);
-        if (axios.isAxiosError(error)) {
-          setError(
-            `データの取得中にエラーが発生しました: ${
-              error.response?.data?.error || error.message
-            }`
-          );
-        } else {
-          setError("データの取得中に予期せぬエラーが発生しました");
-        }
+        setError("データの取得中にエラーが発生しました");
       } finally {
         setLoading(false);
       }
@@ -101,19 +90,13 @@ export default function StorePage({ params }: StorePageProps) {
         storeId: params.id,
         listType,
       });
-      alert(result.message);
-
       if (result.success) {
         router.push("/mypage");
-        console.log(`${listType}に追加されました`);
       }
+      alert(result.message);
     } catch (error) {
       console.error(`${listType}に追加中にエラーが発生しました`, error);
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert("エラーが発生しました。もう一度お試しください");
-      }
+      alert("エラーが発生しました。もう一度お試しください");
     }
   };
 
@@ -143,8 +126,6 @@ export default function StorePage({ params }: StorePageProps) {
       </Box>
     );
   }
-
-  console.log("Rendering store data:", storeData); // デバック用
 
   return (
     <Flex direction="column" minH="100vh">

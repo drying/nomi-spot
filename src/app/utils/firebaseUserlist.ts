@@ -1,5 +1,4 @@
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -129,7 +128,6 @@ export async function getStoreByList({
   listType,
 }: GetStoreByListPrams): Promise<StoreData[]> {
   try {
-    console.log(`Fetching list for user ${userId}, listType: ${listType}`);
     const storeIdsRef = collection(
       db,
       "users",
@@ -141,37 +139,27 @@ export async function getStoreByList({
     const storeIdsSnapShot = await getDocs(storeIdsRef);
 
     if (storeIdsSnapShot.empty) {
-      console.log(`No ${listType} list found for user ${userId}`);
       return [];
     }
 
     const storeIds = storeIdsSnapShot.docs.map((doc) => doc.id);
-    console.log(`Processed storeIDs for ${listType}:`, storeIds);
+    const stores: StoreData[] = [];
 
-    if (storeIds.length === 0) {
-      return [];
-    }
-
-    // Firestoreの制限（IN句で10個まで）に対応
-    const chunkSize = 10;
-    let stores: StoreData[] = [];
-    for (let i = 0; i < storeIds.length; i += chunkSize) {
-      const chunk = storeIds.slice(i, i + chunkSize);
+    // Firestoreの制限（10個まで）に対応
+    for (let i = 0; i < storeIds.length; i += 10) {
+      const chunk = storeIds.slice(i, i + 10);
       const storesQuery = query(
-        collection(db, "stores"), // ここでグローバルな"stores"コレクションを参照
+        collection(db, "stores"),
         where(documentId(), "in", chunk)
       );
-      console.log("Querying stores with IDs:", chunk);
       const chunkSnapshot = await getDocs(storesQuery);
-      console.log(`Found ${chunkSnapshot.size} stores in this chunk`);
-      stores = stores.concat(
-        chunkSnapshot.docs.map(
+      stores.push(
+        ...chunkSnapshot.docs.map(
           (doc) => ({ id: doc.id, ...doc.data() } as StoreData)
         )
       );
     }
 
-    console.log(`Fetched ${stores.length} stores for ${listType}`);
     return stores;
   } catch (error) {
     console.error("Error in getStoreByList", error);

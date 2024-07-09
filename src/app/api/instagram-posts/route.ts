@@ -8,11 +8,7 @@ export async function GET(request: Request) {
   const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
 
   if (!instaAccountName || !instaBusinessId || !accessToken) {
-    console.error("Missing required parameters", {
-      instaAccountName,
-      instaBusinessId: !!instaBusinessId,
-      accessToken: !!accessToken,
-    });
+    console.error("Missing required parameters");
     return NextResponse.json(
       { error: "Missing required parameters" },
       { status: 400 }

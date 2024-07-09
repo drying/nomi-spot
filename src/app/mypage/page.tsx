@@ -53,8 +53,6 @@ export default function Mypage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (authLoading) return; // 認証状態のロードが完了するまで待つ
-
       if (!user) {
         router.push("/");
         return;
@@ -70,12 +68,8 @@ export default function Mypage() {
             setShowAlert(true);
           }
         } else {
-          console.error("ユーザーネームが見つかりません");
           setShowAlert(true);
         }
-
-        // お店データ取得
-        console.log("Fetcing stores for:", activeTab);
 
         const params: GetStoreByListPrams = {
           userId: user.uid,
@@ -83,7 +77,6 @@ export default function Mypage() {
         };
 
         const storesData = await getStoreByList(params);
-        console.log("Fetched stores:", storesData);
         setStores(storesData);
       } catch (error) {
         console.error("Error fetcing data", error);
@@ -93,7 +86,9 @@ export default function Mypage() {
       }
     };
 
-    fetchData();
+    if (!authLoading) {
+      fetchData();
+    }
   }, [user, authLoading, activeTab]);
 
   // タブ切り替え
@@ -113,9 +108,11 @@ export default function Mypage() {
       };
       await moveStoreToList(params);
       alert("リストの移動が終わりました");
-      setStores(stores.filter((store) => store.id !== storeId));
+      setStores((prevStores) =>
+        prevStores.filter((store) => store.id !== storeId)
+      );
     } catch (error) {
-      console.log("Error moving store to another list:", error);
+      console.error("Error moving store to another list:", error);
     }
   };
 
@@ -130,9 +127,11 @@ export default function Mypage() {
       };
       await removeStoreFromList(params);
       alert("リストから削除できました");
-      setStores(stores.filter((store) => store.id !== storeId));
+      setStores((prevStores) =>
+        prevStores.filter((store) => store.id !== storeId)
+      );
     } catch (error) {
-      console.log("Error removing store from list:", error);
+      console.error("Error removing store from list:", error);
     }
   };
 

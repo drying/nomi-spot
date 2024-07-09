@@ -1,16 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { StoreData } from "../types/types";
-import {
-  Box,
-  Center,
-  Container,
-  Flex,
-  Heading,
-  SimpleGrid,
-  Wrap,
-  WrapItem,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
 import StoreCard from "./StoreCard";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -21,8 +12,6 @@ interface StoresListProps {
 
 export default function StoreList({ stores }: StoresListProps) {
   const router = useRouter();
-
-  console.log("StoreList received stores:", stores); //デバック用
 
   return (
     <>
@@ -44,7 +33,6 @@ export default function StoreList({ stores }: StoresListProps) {
         >
           <SimpleGrid minChildWidth="390px" spacing="20px">
             {stores.map((store) => {
-              console.log("Rendering store:", store); //デバック用
               return (
                 <Box key={store.id} mb={2}>
                   <StoreCard

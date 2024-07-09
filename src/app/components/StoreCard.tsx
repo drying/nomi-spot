@@ -20,8 +20,6 @@ export default function StoreCard({
   actionLabel = "詳細",
   actions,
 }: StoreCardProps) {
-  console.log("StoreCard received data:", storeData); // デバック用
-
   return (
     <Card maxW={isCompact ? "sm" : "lg"} shadow="md">
       <CardBody>
