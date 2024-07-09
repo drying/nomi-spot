@@ -4,8 +4,9 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export const updateUsername = async (userId: string, newUsername: string) => {
   try {
+    const userRef = doc(db, "users", userId);
     await setDoc(
-      doc(db, "users", userId),
+      userRef,
       {
         username: newUsername,
       },
@@ -14,10 +15,11 @@ export const updateUsername = async (userId: string, newUsername: string) => {
     console.log("ユーザーネーム登録完了！");
   } catch (error) {
     console.error("ユーザーネーム登録失敗", error);
+    throw error;
   }
 };
 
-export const getUsername = async (userId: string) => {
+export const getUsername = async (userId: string): Promise<string | null> => {
   try {
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);

@@ -32,10 +32,7 @@ const createSchema = (cuurentUsername: string) => {
   });
 };
 
-type FormValues = {
-  username: string;
-  profileImage: FileList;
-};
+type FormValues = z.infer<ReturnType<typeof createSchema>>;
 
 type Toggle = {
   isOpen: boolean;

@@ -58,16 +58,16 @@ export const handleLogout = async () => {
   }
 };
 
-export const handleLoginStatus = async () => {
-  return new Promise<boolean>((resolve) => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        console.log("ログイン中のユーザー", user.email);
-        resolve(true);
-      } else {
-        console.log("ログインしているユーザーなし");
-        resolve(false);
-      }
-    });
-  });
-};
+// export const handleLoginStatus = async () => {
+//   return new Promise<boolean>((resolve) => {
+//     onAuthStateChanged(auth, (user) => {
+//       if (user) {
+//         console.log("ログイン中のユーザー", user.email);
+//         resolve(true);
+//       } else {
+//         console.log("ログインしているユーザーなし");
+//         resolve(false);
+//       }
+//     });
+//   });
+// };
