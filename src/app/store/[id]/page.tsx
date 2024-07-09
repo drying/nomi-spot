@@ -26,7 +26,7 @@ import { addStoreToList } from "@/app/utils/firebaseUserlist";
 import { updateIconIfNeeded } from "@/app/utils/storeUtils";
 import { getInstagramPosts } from "@/app/utils/instagramCache";
 
-export const extractInstagramUsername = (url: string): string | null => {
+const extractInstagramUsername = (url: string): string | null => {
   if (!url) return null;
 
   const regex =
