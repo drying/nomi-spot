@@ -14,12 +14,12 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  AuthDate,
+  AuthData,
   handleLogin,
   handleLogout,
   handleSignup,
@@ -72,7 +72,7 @@ export default function AuthForm() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     console.log(data);
     try {
-      const authData: AuthDate = {
+      const authData: AuthData = {
         email: data.email,
         password: data.password,
       };
@@ -105,44 +105,29 @@ export default function AuthForm() {
     }
   };
 
-  // const loggedInStatus = async () => {
-  //   try {
-  //     const status = await handleLoginStatus();
-  //     console.log("ログイン状態", status);
-  //     setIsLoggedInUser(status);
-  //   } catch (error) {
-  //     console.log("Login Status", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   loggedInStatus();
-  // }, [isLoggedInUser]);
-
   return (
     <>
-      {!loading &&
-        (user ? (
+      {!loading && user ? (
+        <Button
+          onClick={handleLogoutClick}
+          bg="red.500"
+          color="white"
+          minW="120px"
+        >
+          ログアウト
+        </Button>
+      ) : (
+        authNames.map((authName) => (
           <Button
-            onClick={handleLogoutClick}
-            bg="red.500"
-            color="white"
-            minW="120px"
+            onClick={() => handleAuthClick(authName)}
+            key={authName}
+            bg={authName === "新規登録" ? "black" : "#EDF2F8"}
+            color={authName === "新規登録" ? "white" : "initial"}
           >
-            ログアウト
+            {`${authName}`}
           </Button>
-        ) : (
-          authNames.map((authName) => (
-            <Button
-              onClick={() => handleAuthClick(authName)}
-              key={authName}
-              bg={authName === "新規登録" ? "black" : "#EDF2F8"}
-              color={authName === "新規登録" ? "white" : "initial"}
-            >
-              {`${authName}`}
-            </Button>
-          ))
-        ))}
+        ))
+      )}
 
       <Modal onClose={onClose} isOpen={isOpen}>
         <ModalOverlay />

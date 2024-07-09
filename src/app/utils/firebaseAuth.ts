@@ -6,12 +6,12 @@ import {
 } from "firebase/auth";
 import { auth } from "./firebaseConfig";
 
-export type AuthDate = {
+export type AuthData = {
   email: string;
   password: string;
 };
 
-export const handleSignup = async ({ email, password }: AuthDate) => {
+export const handleSignup = async ({ email, password }: AuthData) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -28,7 +28,7 @@ export const handleSignup = async ({ email, password }: AuthDate) => {
   }
 };
 
-export const handleLogin = async ({ email, password }: AuthDate) => {
+export const handleLogin = async ({ email, password }: AuthData) => {
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
