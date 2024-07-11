@@ -39,6 +39,8 @@ import {
   moveStoreToList,
   removeStoreFromList,
 } from "../utils/firebaseUserlist";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../utils/firebaseConfig";
 
 export default function Mypage() {
   const router = useRouter();
@@ -56,6 +58,11 @@ export default function Mypage() {
       if (!user) {
         router.push("/");
         return;
+      } else {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          setUploadImage(userDoc.data().profileImageUrl || null);
+        }
       }
 
       setLoading(true);

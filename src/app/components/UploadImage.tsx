@@ -1,7 +1,14 @@
 import React, { useRef } from "react";
 import { Avatar, Button, Flex, Input, VStack } from "@chakra-ui/react";
-import { auth, storage } from "../utils/firebaseConfig";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { db, storage } from "../utils/firebaseConfig";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { doc, updateDoc } from "firebase/firestore";
+import { useAuth } from "../contexts/AuthContext";
 
 type currentImage = {
   setUploadImage: (image: string | null) => void;
@@ -13,43 +20,65 @@ export default function UploadImage({
   uploadImage,
 }: currentImage) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { user } = useAuth();
 
   // 画像プレビュー機能
   const handleClickUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    // 画像が存在しているか
-    if (files) {
-      // リストの最初のファイルを取得
+    if (files && files[0]) {
       const file = files[0];
-      // ファイル入力で選択したファイルの内容を読み取る
-      // FileReaderは非同期で読み取りするためのJavaScriptオブジェクト
-      const reader = new FileReader();
-      // ファイル読み込み完了時に呼び出される関数
-      reader.onload = (e) => {
-        // 画像ファイルの内容を表すデータURLとして更新（データURLは、画像などのバイナリデータをテキスト形式で表現したもの）
-        setUploadImage(e.target?.result as string);
-      };
-      // プレビュー表示のためデータURLを読み込む
-      // readAsDataURLはFileReaderのメソッド
-      reader.readAsDataURL(file);
+      // ローカルでプレビュー
+      try {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setUploadImage(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
 
-      await uploadToFirebase(file);
-    } else {
-      setUploadImage(null);
+        await uploadToFirebase(file);
+        console.log("プロフィール画像が更新されました");
+      } catch (error) {
+        console.error("画像のアップロードに失敗しました", error);
+        setUploadImage(null);
+      }
     }
   };
 
   const uploadToFirebase = async (file: File) => {
+    if (!user) throw new Error("認証されたユーザーが見つかりませんでした");
+
+    const fileRef = ref(storage, `userIcons/${user.uid}`);
+    await uploadBytes(fileRef, file);
+    const downloadURL = await getDownloadURL(fileRef);
+
+    const userDocRef = doc(db, "users", user.uid);
+    await updateDoc(userDocRef, {
+      profileImageUrl: downloadURL,
+    });
+
+    console.log("Firestoreでプロフィール画像URLが更新されました");
+    return downloadURL;
+  };
+
+  const handleDeleteImage = async () => {
+    if (!user) {
+      console.error("ユーザーが認証されていません");
+      return;
+    }
+
     try {
-      const user = auth.currentUser;
-      if (user) {
-        const fileRef = ref(storage, `userIcons/${user.uid}`);
-        await uploadBytes(fileRef, file);
-        const downloadURL = await getDownloadURL(fileRef);
-        setUploadImage(downloadURL);
-      }
+      const fileRef = ref(storage, `userIcons/${user.uid}`);
+      await deleteObject(fileRef);
+
+      const userDocRef = doc(db, "users", user.uid);
+      await updateDoc(userDocRef, {
+        profileImageUrl: null,
+      });
+
+      setUploadImage(null);
+      console.log("プロフィール画像が削除されました");
     } catch (error) {
-      console.error("画像のアップロードに失敗しました", error);
+      console.error("画像の削除に失敗しました", error);
     }
   };
 
@@ -83,9 +112,15 @@ export default function UploadImage({
         <>
           <Flex alignItems="center">
             <Avatar src={uploadImage} size="xl" mr={4} />
-            <Button m={2} onClick={handleClickCancel}>
-              キャンセル
-            </Button>
+            {user ? (
+              <Button m={2} onClick={handleDeleteImage} colorScheme="red">
+                削除
+              </Button>
+            ) : (
+              <Button m={2} onClick={handleClickCancel}>
+                キャンセル
+              </Button>
+            )}
           </Flex>
         </>
       ) : (
