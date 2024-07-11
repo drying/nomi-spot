@@ -16,7 +16,7 @@ export default function StoresPage() {
         const storeData = await getAllStores();
         setStores(storeData);
       } catch (error) {
-        console.error("Error fetching stores:", error);
+        console.error("お店情報取得エラー:", error);
         setError("お店の情報を取得できませんでした");
       } finally {
         setLoading(false);

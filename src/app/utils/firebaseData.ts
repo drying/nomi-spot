@@ -56,7 +56,7 @@ export const uploadIMageToStorage = async (
 
     return downloadUrl;
   } catch (error) {
-    console.error("Error uploading image to Storage:", error);
+    console.error("ストレージへの画像アップロードのエラー:", error);
     throw error;
   }
 };

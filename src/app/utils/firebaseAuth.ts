@@ -20,9 +20,9 @@ export const handleSignup = async ({ email, password }: AuthData) => {
     return userCredential.user;
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Error message", error.message);
+      console.error("エラーメッセージ", error.message);
     } else {
-      console.error("Unknow error", error);
+      console.error("不明なエラー", error);
     }
   }
 };
@@ -37,9 +37,9 @@ export const handleLogin = async ({ email, password }: AuthData) => {
     return userCredential.user;
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Error message", error.message);
+      console.error("エラーメッセージ", error.message);
     } else {
-      console.error("Unknow error", error);
+      console.error("不明なエラー", error);
     }
   }
 };
@@ -50,9 +50,9 @@ export const handleLogout = async () => {
     console.log("ログアウト完了");
   } catch (error) {
     if (error instanceof Error) {
-      console.error("Logout error", error.message);
+      console.error("ログアウトエラー", error.message);
     } else {
-      console.log("Unkown error", error);
+      console.log("不明なエラー", error);
     }
   }
 };

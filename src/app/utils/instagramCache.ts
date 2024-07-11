@@ -28,12 +28,12 @@ export async function getInstagramPosts(instaAccountName: string) {
       const now = Timestamp.now();
 
       if (now.seconds - cachedData.timestamp.seconds < CACHE_DURATION) {
-        console.log("Using cached Instagram data");
+        console.log("キャッシュされたinstagramのデータを使用");
         return cachedData.posts;
       }
     }
 
-    console.log("Fetching new Instagram data");
+    console.log("新しいインスタグラムのデータを取得");
     const response = await axios.get(
       `/api/instagram-posts?instaAccountName=${instaAccountName}`
     );
@@ -47,7 +47,7 @@ export async function getInstagramPosts(instaAccountName: string) {
 
     return posts;
   } catch (error) {
-    console.error("Error accessing Instagram cache:", error);
+    console.error("Instagramキャッシュへのアクセスエラー:", error);
     throw error;
   }
 }

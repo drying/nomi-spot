@@ -60,7 +60,7 @@ export async function addStoreToList({
       message: `お店が${listType}リストに追加されました。`,
     };
   } catch (error) {
-    console.error("Error adding store to list:", error);
+    console.error("お店をリストへ追加する際のエラー:", error);
     return {
       success: false,
       message: "エラーが発生しました。もう一度お試しください。",
@@ -162,7 +162,7 @@ export async function getStoreByList({
 
     return stores;
   } catch (error) {
-    console.error("Error in getStoreByList", error);
+    console.error("getStoreByList関数のエラー", error);
     throw error;
   }
 }

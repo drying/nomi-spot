@@ -89,9 +89,9 @@ export default function AuthForm() {
       onClose();
     } catch (error) {
       if (error instanceof Error) {
-        console.error("Error message", error.message);
+        console.error("エラーメッセージ", error.message);
       } else {
-        console.error("Unknow error", error);
+        console.error("不明なエラー", error);
       }
     }
   };
@@ -101,7 +101,7 @@ export default function AuthForm() {
       await handleLogout();
       router.push("/");
     } catch (error) {
-      console.error("Logout error", error);
+      console.error("ログアウトエラー", error);
     }
   };
 

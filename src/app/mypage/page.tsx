@@ -86,7 +86,7 @@ export default function Mypage() {
         const storesData = await getStoreByList(params);
         setStores(storesData);
       } catch (error) {
-        console.error("Error fetcing data", error);
+        console.error("データ取得エラー", error);
         setStores([]); //エラー時は空の配列をセット
       } finally {
         setLoading(false);
@@ -119,7 +119,7 @@ export default function Mypage() {
         prevStores.filter((store) => store.id !== storeId)
       );
     } catch (error) {
-      console.error("Error moving store to another list:", error);
+      console.error("お店を別のリストに移動する際のエラー:", error);
     }
   };
 
@@ -138,7 +138,7 @@ export default function Mypage() {
         prevStores.filter((store) => store.id !== storeId)
       );
     } catch (error) {
-      console.error("Error removing store from list:", error);
+      console.error("お店を別のリストから削除する際のエラー:", error);
     }
   };
 

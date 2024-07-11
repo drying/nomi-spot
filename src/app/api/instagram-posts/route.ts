@@ -8,9 +8,9 @@ export async function GET(request: Request) {
   const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
 
   if (!instaAccountName || !instaBusinessId || !accessToken) {
-    console.error("Missing required parameters");
+    console.error("必要なパラメータが見つからない");
     return NextResponse.json(
-      { error: "Missing required parameters" },
+      { error: "必要なパラメータが見つからない" },
       { status: 400 }
     );
   }
@@ -65,12 +65,12 @@ export async function GET(request: Request) {
     return NextResponse.json(imagePosts);
   } catch (error: any) {
     console.error(
-      "Instagram API request failed:",
+      "instagramのAPIリクエストに失敗しました:",
       error.response?.data || error.message
     );
     return NextResponse.json(
       {
-        error: "Failed to fetch Instagram data",
+        error: "instagramのデータ取得に失敗",
         details: error.response?.data || error.message,
       },
       { status: error.response?.status || 500 }

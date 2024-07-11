@@ -69,7 +69,7 @@ export default function StorePage({ params }: StorePageProps) {
           setStoreData(data);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("データ取得エラー:", error);
         setError("データの取得中にエラーが発生しました");
       } finally {
         setLoading(false);
