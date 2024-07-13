@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Nomi Spot
 
-## Getting Started
+「Nomi Spot」は、飲み屋さん選びを簡単にするためのお店保存アプリです。
 
-First, run the development server:
+## 制作した目的
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+普段instagramやGoogleマップで行きたいお店情報を保存していますが、これらのサービスは店舗情報の管理に特化していないため、保存したお店を探すのが面倒でした。そこで、お店の保存に特化したサービスを作ることで、管理を容易にし、「いつか行ってみたい」と思っていたお店を簡単に見つけられるようにしたいと考えました。
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## アプリURL
+https://nomi-spot.vercel.app/
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+確認用アカウント
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- メールアドレス: user@test.com
+-  パスワード: 12345678
 
-## Learn More
+※ユーザーネームが「username」の場合、ユーザーネームとアイコン画像の登録を促すアラートが毎回表示されます。これは現在の仕様であり、今後のアップデートでアラート表示の頻度を改善予定です。ご不便をおかけしますが、ユーザーネームを変更していただくか、一時的にご了承ください。
 
-To learn more about Next.js, take a look at the following resources:
+## 使用技術
+### フロントエンド
+- next.js v14.2.3(App Router)
+- react v^18
+- typescript v^5
+- chakra-ui v2.8.2
+- axios v^1.7.2
+- firebase v^10.12.2
+- react-hook-form v ^7.51.5
+- zod v^3.23.8
+- eslint v^8.0.0
+- tailwindcss v^3.4.4
+### バックエンド
+- firebase
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 主要機能
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. ユーザー認証
+   - メールアドレスとパスワードを使用したサインアップ/ログイン
+   - ユーザープロフィールの作成と編集（ユーザーネーム、プロフィール画像）
 
-## Deploy on Vercel
+2. お店リスト管理
+   - "行きたい"、"行った"、"お気に入り"の3つのカテゴリでお店を管理
+   - お店の追加、削除、カテゴリ間の移動が可能
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. お店詳細表示
+   - 各お店の詳細情報（店名、instagramやGoogleマップリンクなど）を表示
+   - お店のinstagramフィードの表示（最新の投稿を表示）
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. マイページ機能
+   - ユーザーのプロフィール情報表示
+   - カテゴリ別のお店リスト表示
+   - プロフィール編集機能（ユーザーネーム、プロフィール画）
+
+5. 画像管理
+   - ユーザープロフィール画像のアップロードと表示
+   - お店のアイコン画像の表示（instagramの最新の投稿から取得）
+
+## 今後の実装予定機能
+1. ユーザーによるお店情報登録機能
+   - ユーザーが新しいお店の情報を直接アプリに追加
+   - 登録情報の審査・承認プロセスの実装
+2. 写真投稿機能
+   - ユーザーがお店で撮影した写真を投稿し、共有できる機能
+3. リスト共有機能
+   - "行きたい"、"行った"、"お気に入り"の3つのリストを他のユーザーと共有
+4. ソーシャル機能の拡充
+   - ユーザー間のフォロー/フォロワー機能
+   - お店やリストへのいいね、コメント機能
+5. 位置情報を活用した機能
+   - 現在地周辺のお店のレコメンデーション
+   - マップ上でのお店の表示と経路案内
