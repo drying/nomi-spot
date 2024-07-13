@@ -1,8 +1,8 @@
 "use client";
-import StoreList from "../components/StoreList";
+import StoreList from "./_components/StoreList";
 import { useEffect, useState } from "react";
-import { StoreData } from "../types/types";
-import { getAllStores } from "../utils/getStoreUtils";
+import { StoreData } from "../../types/types";
+import { getAllStores } from "../../utils/getStoreUtils";
 import { Box, Spinner, Text } from "@chakra-ui/react";
 
 export default function StoresPage() {

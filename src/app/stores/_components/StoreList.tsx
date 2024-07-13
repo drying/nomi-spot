@@ -1,10 +1,10 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { StoreData } from "../types/types";
+import { StoreData } from "../../../types/types";
 import { Box, Container, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
-import StoreCard from "./StoreCard";
-import Header from "./Header";
-import Footer from "./Footer";
+import StoreCard from "../../../components/StoreCard";
+import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
 
 interface StoresListProps {
   stores: StoreData[];

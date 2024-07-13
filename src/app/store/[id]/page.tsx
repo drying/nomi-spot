@@ -14,17 +14,17 @@ import {
   Container,
   Flex,
 } from "@chakra-ui/react";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import { getStoreById } from "@/app/utils/getStoreUtils";
+import Header from "../../../components/Header";
+import Footer from "../../../components/Footer";
+import { getStoreById } from "../../../utils/getStoreUtils";
 import { useEffect, useState } from "react";
-import { InstagramPost, Status, StoreData } from "@/app/types/types";
-import StoreCard from "@/app/components/StoreCard";
-import { useAuth } from "@/app/contexts/AuthContext";
+import { InstagramPost, Status, StoreData } from "../../../types/types";
+import StoreCard from "../../../components/StoreCard";
+import { useAuth } from "../../../contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { addStoreToList } from "@/app/utils/firebaseUserlist";
-import { updateIconIfNeeded } from "@/app/utils/storeUtils";
-import { getInstagramPosts } from "@/app/utils/instagramCache";
+import { addStoreToList } from "../../../utils/firebaseUserlist";
+import { updateIconIfNeeded } from "../../../utils/storeUtils";
+import { getInstagramPosts } from "../../../utils/instagramCache";
 
 const extractInstagramUsername = (url: string): string | null => {
   if (!url) return null;

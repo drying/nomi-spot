@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Avatar, Button, Flex, Input, VStack } from "@chakra-ui/react";
-import { db, storage } from "../utils/firebaseConfig";
+import { db, storage } from "../../../utils/firebaseConfig";
 import {
   deleteObject,
   getDownloadURL,
@@ -8,7 +8,7 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../../contexts/AuthContext";
 
 type currentImage = {
   setUploadImage: (image: string | null) => void;

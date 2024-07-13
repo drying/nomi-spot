@@ -18,8 +18,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import UploadImage from "./UploadImage";
-import { auth } from "../utils/firebaseConfig";
-import { updateUsername } from "../utils/firebaseData";
+import { auth } from "../../../utils/firebaseConfig";
+import { updateUsername } from "../../../utils/firebaseData";
 
 const createSchema = (cuurentUsername: string) => {
   return z.object({

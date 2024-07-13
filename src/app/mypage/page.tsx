@@ -18,29 +18,29 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import RegisterForm from "../components/RegisterForm";
-import CustomAlert from "../components/CustomAlert";
-import { getUsername } from "../utils/firebaseData";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import RegisterForm from "./_components/RegisterForm";
+import CustomAlert from "./_components/CustomAlert";
+import { getUsername } from "../../utils/firebaseData";
 import {
   AddRemoveToListPrams,
   GetStoreByListPrams,
   MoveToListPrams,
   Status,
   StoreData,
-} from "../types/types";
-import { useAuth } from "../contexts/AuthContext";
+} from "../../types/types";
+import { useAuth } from "../../contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { FaCog } from "react-icons/fa";
-import StoreCard from "../components/StoreCard";
+import StoreCard from "../../components/StoreCard";
 import {
   getStoreByList,
   moveStoreToList,
   removeStoreFromList,
-} from "../utils/firebaseUserlist";
+} from "../../utils/firebaseUserlist";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../utils/firebaseConfig";
+import { db } from "../../utils/firebaseConfig";
 
 export default function Mypage() {
   const router = useRouter();
