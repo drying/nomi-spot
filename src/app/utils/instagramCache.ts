@@ -10,7 +10,7 @@ import crypto from "crypto";
 import axios from "axios";
 
 const db = getFirestore(getApp());
-const CACHE_DURATION = 7 * 24 * 60 * 60; // 1週間（秒）
+const CACHE_DURATION = 24 * 60 * 60; // 1日（秒）
 const COLLECTION_NAME = "instagramCache";
 
 export async function getInstagramPosts(instaAccountName: string) {
